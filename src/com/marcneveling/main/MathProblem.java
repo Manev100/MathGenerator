@@ -1,45 +1,66 @@
 package com.marcneveling.main;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+
+import com.marcneveling.operation.Div;
+import com.marcneveling.operation.Operation;
 
 public class MathProblem {
 	
 	private List<Integer> constants;
-	private List<Operations> operations;
+	private List<Operation> operations;
 	private int result;
 	
-	public MathProblem(List<Integer> constants, List<Operations> operations) {
+	public MathProblem(List<Integer> constants, List<Operation> operations) throws IllegalArgumentException{
+		if(operations.isEmpty() || constants.isEmpty()){
+			throw new IllegalArgumentException("constants and operations cannot be empty!");
+		}
 		if(constants.size() == operations.size() + 1){
 			this.constants = constants;
 			this.operations = operations;
-			this.result = solve();
+			try{
+				this.result = solve();
+			}catch(IllegalStateException e){
+				throw new IllegalArgumentException("Problem includes a division by 0 and therefore cannot be solved!");
+			}
 		}else{
 			throw new IllegalArgumentException("Number of constants must be equal to the number of operations plus 1: 1 + 2 - 3 -> 3 constants 2 operations ");
 		}
 	}
 	
-	private int solve() {
+	private int solve() throws IllegalStateException{
 		int result = 0;
+		// clone constants and operations
+		List<Integer> constantsCopy = new LinkedList<>(constants);
+		List<Operation> operationsCopy = new LinkedList<>(operations);
+		
 		// compute * and /
-		for (int i = 0; i < operations.size(); i++) {
-			Operations op = operations.get(i);
+		for (int i = 0; i < operationsCopy.size(); i++) {
+			Operation op = operationsCopy.get(i);
 			if(op.isPrioritized()){
+				// check for division by 0
+				if(op.equals(new Div()) && constantsCopy.get(i+1) == 0){
+					throw new IllegalStateException("Cannot Solve because of division by 0!");
+				}
+				
 				// merge this part-problem and store result
-				constants.set(i, op.result(constants.get(i), constants.get(i+1)));
+				constantsCopy.set(i, op.result(constantsCopy.get(i), constantsCopy.get(i+1)));
 				//remove the part-problem bc it has been computed
-				constants.remove(i+1);
-				operations.remove(i);
+				constantsCopy.remove(i+1);
+				operationsCopy.remove(i);
 				//prevent skipping the next operation because the current one got removed
 				i--;
 			}
 		}
 		
 		// compute + and -
-		result = constants.get(0);
-		for (int i = 0; i < operations.size(); i++) {
-			Operations op = operations.get(i);
-			result = op.result(result, constants.get(i+1)); 
+		result = constantsCopy.get(0);
+		for (int i = 0; i < operationsCopy.size(); i++) {
+			Operation op = operationsCopy.get(i);
+			result = op.result(result, constantsCopy.get(i+1)); 
 		}
 		return result;
 	}
@@ -48,11 +69,26 @@ public class MathProblem {
 		return constants.iterator();
 	}
 	
-	public Iterator<Operations> getOperationsIterator(){
+	public Iterator<Operation> getOperationsIterator(){
 		return operations.iterator();
 	}
 
 	public int getResult() {
 		return result;
 	}
+	
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		Iterator<Integer> constantsIt = getConstantsIterator();
+		Iterator<Operation> operationsIt = getOperationsIterator();
+		while(operationsIt.hasNext()){
+			str.append(constantsIt.next());
+			str.append(operationsIt.next().getSign());
+		}
+		str.append(constantsIt.next());
+		str.append("=");
+		str.append(result);
+		return str.toString();
+	}
 }
+		

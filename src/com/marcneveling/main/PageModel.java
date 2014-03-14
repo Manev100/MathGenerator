@@ -23,6 +23,7 @@ public class PageModel{
 		this.lines = 20;
 		this.columns = 2;
 		this.tabs = 4;
+		this.numberOfProblems = lines*columns;
 	}
 	
 	public int getLines() {

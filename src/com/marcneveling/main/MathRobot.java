@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.marcneveling.operation.Operation;
+
 public class MathRobot {
 	Robot robot;
 	public MathRobot(){
@@ -17,24 +19,9 @@ public class MathRobot {
 		}
 	}
 	
-	public void typeMathProblem(int x, int y, Operations operation){
-		keyTypeNumber(x);
-		keyType(KeyEvent.VK_SPACE);
-		keyTypeOperation(operation);
-		keyType(KeyEvent.VK_SPACE);
-		keyTypeNumber(y);
-		keyType(KeyEvent.VK_SPACE);
-		
-		robot.keyPress(KeyEvent.VK_SHIFT);
-		keyType(KeyEvent.VK_0);
-		robot.keyRelease(KeyEvent.VK_SHIFT);
-		
-		keyType(KeyEvent.VK_TAB);
-	}
-	
 	public void typeMathProblem(MathProblem problem){
 		Iterator<Integer> constants = problem.getConstantsIterator();
-		Iterator<Operations> operations = problem.getOperationsIterator();
+		Iterator<Operation> operations = problem.getOperationsIterator();
 		while(constants.hasNext()){
 			keyTypeNumber(constants.next());
 			keyType(KeyEvent.VK_SPACE);
@@ -58,7 +45,7 @@ public class MathRobot {
 		}
 	}
 	
-	public void keyTypeOperation(Operations operation){
+	public void keyTypeOperation(Operation operation){
 		if(operation.getModifier() != 0){
 			robot.keyPress(operation.getModifier());
 			keyType(operation.getkeyCode());
@@ -114,3 +101,4 @@ public class MathRobot {
 
 	
 }
+		
