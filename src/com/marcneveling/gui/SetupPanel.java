@@ -20,12 +20,14 @@ public class SetupPanel extends JPanel {
 	private Map<String, JTextField> textFieldMapping;
 	private MathModel mathModel;
 	private PageModel pageModel;
+	private GuiController controller;
 	
-	public SetupPanel(MathModel mathModel, PageModel pageModel){
+	public SetupPanel(MathModel mathModel, PageModel pageModel, GuiController controller){
 		super();
 		textFieldMapping = new HashMap<>();
 		this.mathModel = mathModel;
 		this.pageModel = pageModel;
+		this.controller = controller;
 		add(buildPagePanel());
 		add(buildMathPanel());
 		this.mathModel.addPropertyChangeListener(new DataModelsListener());
@@ -35,13 +37,13 @@ public class SetupPanel extends JPanel {
 	
 	private JPanel buildMathPanel() {
 		JPanel panel = new JPanel();
-		FormElement page = new FormElement();
+		FormElement page = new FormElement(controller);
 		
-		textFieldMapping.put("minValue", page.addForm("Min value", 0));
-		textFieldMapping.put("maxValue", page.addForm("Max value", 20));
-		textFieldMapping.put("minResult", page.addForm("Min result", 0));
-		textFieldMapping.put("maxResult", page.addForm("Max result", 20));
-		textFieldMapping.put("numberOfConstants", page.addForm("# of constants", 2));
+		textFieldMapping.put("minValue", page.addForm("Min value", 0, "minValue"));
+		textFieldMapping.put("maxValue", page.addForm("Max value", 20, "maxValue"));
+		textFieldMapping.put("minResult", page.addForm("Min result", 0, "minResult"));
+		textFieldMapping.put("maxResult", page.addForm("Max result", 20, "maxResult"));
+		textFieldMapping.put("numberOfConstants", page.addForm("# of constants", 2, "numberOfConstants"));
 		
 		
 		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
@@ -53,12 +55,12 @@ public class SetupPanel extends JPanel {
 
 	private JPanel buildPagePanel() {
 		JPanel panel = new JPanel();
-		FormElement page = new FormElement();
+		FormElement page = new FormElement(controller);
 		
-		textFieldMapping.put("lines", page.addForm("Lines", 3));
-		textFieldMapping.put("columns", page.addForm("Columns", 4));
-		textFieldMapping.put("tabs", page.addForm("Tabs", 4));
-		textFieldMapping.put("numberOfProblems", page.addForm("# of problems", 4));
+		textFieldMapping.put("lines", page.addForm("Lines", 3, "lines"));
+		textFieldMapping.put("columns", page.addForm("Columns", 4, "columns"));
+		textFieldMapping.put("tabs", page.addForm("Tabs", 4, "tabs"));
+		textFieldMapping.put("numberOfProblems", page.addForm("# of problems", 4, "numberOfProblems"));
 		
 		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
 				"Page Setup"));

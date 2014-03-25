@@ -26,18 +26,20 @@ public class FormElement extends JPanel {
 	private JPanel content;
 	private int numberOfElements;
 	private int defaultVal;
+	private GuiController controller;
 	
-	public FormElement(){
+	public FormElement(GuiController controller){
 		super(new GridBagLayout());
+		this.controller = controller;
 		numberOfElements = 0;
 		defaultVal = 0;
 	}
 	
-	public JTextField addForm(String name, int defaultVal){
+	public JTextField addForm(String name, int defaultVal, String field){
 		this.defaultVal = defaultVal;
 		JLabel label = new JLabel(name);
 		
-		JTextField tf = new JTextField();
+		BoundTextField tf = new BoundTextField(field);
 		tf.setText("" + defaultVal);
 		tf.setColumns(5);
 		tf.setInputVerifier(new NumberVerifier());
@@ -46,18 +48,19 @@ public class FormElement extends JPanel {
 		tf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JTextField source = (JTextField)arg0.getSource();
-				source.getInputVerifier().verify(source);
-				source.setFocusable(false);
-				source.setFocusable(true);
+				BoundTextField source = (BoundTextField)arg0.getSource();
+				controller.verifyInput(source);
+				controller.commitChangesToModel(source, Integer.parseInt(source.getText()));
+				
 			}
 		});
 		
 		tf.addFocusListener(new FocusListener() {
 			@Override
-			public void focusLost(FocusEvent arg0) {
-				JTextField source = (JTextField)arg0.getSource();
-				
+			public void focusLost(FocusEvent e) {
+				BoundTextField source = (BoundTextField) e.getSource();
+				controller.verifyInput(source);
+				controller.commitChangesToModel(source, Integer.parseInt(source.getText()));
 			}
 			
 			@Override

@@ -13,7 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.marcneveling.main.Generator;
+import com.jgoodies.binding.PresentationModel;
+import com.marcneveling.main.KeyStrokesGenerator;
 import com.marcneveling.main.MathModel;
 import com.marcneveling.main.MathRobot;
 import com.marcneveling.main.PageModel;
@@ -22,11 +23,16 @@ public class MainFrame extends JFrame {
 
 	private JButton generateButton;
 	private CountDownPane glasspane; 	
-	private Generator generator;
+	private MathModel math;
+	private PageModel page;
+	private GuiController controller;
+
 	
-	public MainFrame() {
+	public MainFrame(MathModel math, PageModel page, GuiController controller) {
 		super("Math Generator");
-		generator = new Generator(new MathModel(), new PageModel());
+		this.math = math;
+		this.page = page;
+		this.controller = controller;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 250);
 		setLocationRelativeTo(null);
@@ -46,7 +52,7 @@ public class MainFrame extends JFrame {
 		generateButton.setText("Go!");
 		generateButton.setFocusable(false);
 		
-		mainPanel.add(new SetupPanel(generator.getMathModel(), generator.getPageModel()),BorderLayout.CENTER);
+		mainPanel.add(new SetupPanel(math, page, controller),BorderLayout.CENTER);
 		mainPanel.add(generateButton, BorderLayout.SOUTH);
 		
 		setContentPane(mainPanel);
@@ -57,14 +63,12 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showCountDown() {
-		
 		getGlassPane().setVisible(true);
 		startDownloadThread();
 	}
 	
 	private void startDownloadThread(){
 		Thread countdown = new Thread(new Runnable(){
-
 			@Override
 			public void run() {
 				for (int i = 0; i < 3; i++) {
@@ -76,7 +80,7 @@ public class MainFrame extends JFrame {
 				}
 				glasspane.setVisible(false);
 				glasspane.reset();
-				generator.generateIt(new MathRobot());
+				controller.startGenerating();
 				
 			}
 		});	

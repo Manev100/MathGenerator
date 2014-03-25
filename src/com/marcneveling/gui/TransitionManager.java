@@ -1,5 +1,8 @@
 package com.marcneveling.gui;
 
+import com.marcneveling.main.MathModel;
+import com.marcneveling.main.PageModel;
+
 
 public class TransitionManager {
 	
@@ -8,8 +11,8 @@ public class TransitionManager {
 	private TransitionManager() {
 	}
 	
-	public static MainFrame buildMainFrame(){
-		mainFrame = new MainFrame();
+	public static MainFrame buildMainFrame(MathModel math, PageModel page, GuiController controller){
+		mainFrame = new MainFrame(math, page, controller);
 		
 		return mainFrame;
 	}

@@ -3,7 +3,14 @@ package com.marcneveling.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import com.jgoodies.binding.PresentationModel;
+
 public class PageModel{
+	
+	public static final String PAGE_SETUP_LINES = "lines";
+	public static final String PAGE_SETUP_COLUMNS = "columns";
+	public static final String PAGE_SETUP_TABS = "tabs";
+	public static final String PAGE_SETUP_NUMBER_OF_PROBLEMS = "numberOfProblems";
 	
 	private int lines;
 	private int columns;
@@ -32,7 +39,7 @@ public class PageModel{
 	public void setLines(int lines) {
 		int oldLines = this.lines;
 		this.lines = lines;
-		mPcs.firePropertyChange("lines", oldLines, lines);
+		mPcs.firePropertyChange(PAGE_SETUP_LINES, oldLines, lines);
 	}
 	public int getColumns() {
 		return columns;
@@ -40,7 +47,7 @@ public class PageModel{
 	public void setColumns(int columns) {
 		int oldColumns = this.columns;
 		this.columns = columns;
-		mPcs.firePropertyChange("columns", oldColumns, columns);
+		mPcs.firePropertyChange(PAGE_SETUP_COLUMNS, oldColumns, columns);
 		setNumberOfProblems(lines * columns);
 	}
 	public int getTabs() {
@@ -49,7 +56,7 @@ public class PageModel{
 	public void setTabs(int tabs) {
 		int oldTabs = this.tabs;
 		this.tabs = tabs;
-		mPcs.firePropertyChange("tabs", oldTabs, tabs);
+		mPcs.firePropertyChange(PAGE_SETUP_TABS, oldTabs, tabs);
 	}
 
 	public int getNumberOfProblems() {
@@ -59,7 +66,7 @@ public class PageModel{
 	public void setNumberOfProblems(int numberOfProblems) {
 		int oldVal = this.numberOfProblems;
 		this.numberOfProblems = numberOfProblems;
-		mPcs.firePropertyChange("NumberOfProblems", oldVal, numberOfProblems);
+		mPcs.firePropertyChange(PAGE_SETUP_NUMBER_OF_PROBLEMS, oldVal, numberOfProblems);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

@@ -5,9 +5,12 @@ import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.marcneveling.operation.Operation;
+import com.marcneveling.operation.Plus;
+
 public class MathModel {
 	
-	private List<Operations> operations;
+	private List<Operation> operations;
 	private int minValue;
 	private int maxValue;
 	private int maxResult;
@@ -15,7 +18,7 @@ public class MathModel {
 	private int numberOfConstants;
 	private PropertyChangeSupport mPcs = new PropertyChangeSupport(this);
 	
-	public MathModel(List<Operations> operations, int rangeX, int rangeY,
+	public MathModel(List<Operation> operations, int rangeX, int rangeY,
 			int maxResult, int minResult, int numberOfConstants) {
 		this.operations = operations;
 		this.minValue = rangeX;
@@ -26,8 +29,8 @@ public class MathModel {
 	}
 	
 	public MathModel() {
-		this.operations = new LinkedList<Operations>();
-		operations.add(Operations.PLUS);
+		this.operations = new LinkedList<Operation>();
+		operations.add(new Plus());
 		this.minValue = 0;
 		this.maxValue = 20;
 		this.maxResult = 20;
@@ -35,19 +38,19 @@ public class MathModel {
 		this.setNumberOfConstants(3);
 	}
 	
-	public List<Operations> getOperations() {
+	public List<Operation> getOperations() {
 		return operations;
 	}
-	public void addOperation(Operations operation) {
+	public void addOperation(Operation operation) {
 		if(!operations.contains(operation)){
-			List<Operations> oldList = new LinkedList<Operations>(operations);
+			List<Operation> oldList = new LinkedList<Operation>(operations);
 			operations.add(operation);
 			mPcs.firePropertyChange("operations", oldList, operations);
 		}
 	}
-	public void removeOperation(Operations operation) {
+	public void removeOperation(Operation operation) {
 		if(operations.contains(operation)){
-			List<Operations> oldList = new LinkedList<Operations>(operations);
+			List<Operation> oldList = new LinkedList<Operation>(operations);
 			operations.remove(operation);
 			mPcs.firePropertyChange("operations", oldList, operations);
 		}
