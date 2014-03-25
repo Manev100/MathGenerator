@@ -2,10 +2,12 @@ package com.marcneveling.main;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.Field;
 
 import com.jgoodies.binding.PresentationModel;
+import com.marcneveling.gui.AbstractModel;
 
-public class PageModel{
+public class PageModel extends AbstractModel{
 	
 	public static final String PAGE_SETUP_LINES = "lines";
 	public static final String PAGE_SETUP_COLUMNS = "columns";
@@ -16,13 +18,16 @@ public class PageModel{
 	private int columns;
 	private int tabs;
 	private int numberOfProblems;
-	private PropertyChangeSupport mPcs = new PropertyChangeSupport(this);
+	
+	private boolean changedFlag;
+	
 	public PageModel(int lines, int columns, int tabs, int numberOfProblems) {
+		super();
 		this.lines = lines;
 		this.columns = columns;
 		this.tabs = tabs;
 		this.numberOfProblems = numberOfProblems;
-		
+		this.changedFlag = false;
 		
 	}
 	
@@ -39,7 +44,13 @@ public class PageModel{
 	public void setLines(int lines) {
 		int oldLines = this.lines;
 		this.lines = lines;
-		mPcs.firePropertyChange(PAGE_SETUP_LINES, oldLines, lines);
+		if(changedFlag == false){
+            changedFlag = true;
+            setNumberOfProblems(lines * columns);
+            changedFlag = false;
+        }
+		
+		firePropertyChange(PAGE_SETUP_LINES, oldLines, lines);
 	}
 	public int getColumns() {
 		return columns;
@@ -47,8 +58,12 @@ public class PageModel{
 	public void setColumns(int columns) {
 		int oldColumns = this.columns;
 		this.columns = columns;
-		mPcs.firePropertyChange(PAGE_SETUP_COLUMNS, oldColumns, columns);
-		setNumberOfProblems(lines * columns);
+		if(changedFlag == false){
+            changedFlag = true;
+            setNumberOfProblems(lines * columns);
+            changedFlag = false;
+        }
+		firePropertyChange(PAGE_SETUP_COLUMNS, oldColumns, columns);
 	}
 	public int getTabs() {
 		return tabs;
@@ -56,7 +71,7 @@ public class PageModel{
 	public void setTabs(int tabs) {
 		int oldTabs = this.tabs;
 		this.tabs = tabs;
-		mPcs.firePropertyChange(PAGE_SETUP_TABS, oldTabs, tabs);
+		firePropertyChange(PAGE_SETUP_TABS, oldTabs, tabs);
 	}
 
 	public int getNumberOfProblems() {
@@ -66,14 +81,15 @@ public class PageModel{
 	public void setNumberOfProblems(int numberOfProblems) {
 		int oldVal = this.numberOfProblems;
 		this.numberOfProblems = numberOfProblems;
-		mPcs.firePropertyChange(PAGE_SETUP_NUMBER_OF_PROBLEMS, oldVal, numberOfProblems);
+		if(changedFlag == false){
+            changedFlag = true;
+            int newLines = numberOfProblems / columns;
+            if(numberOfProblems % columns != 0){
+                newLines++;
+            }
+            setLines(newLines);
+            changedFlag = false;
+        }
+		firePropertyChange(PAGE_SETUP_NUMBER_OF_PROBLEMS, oldVal, numberOfProblems);
 	}
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-        mPcs.addPropertyChangeListener(listener);
-    }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        mPcs.removePropertyChangeListener(listener);
-    }
 }

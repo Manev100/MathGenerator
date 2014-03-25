@@ -90,6 +90,7 @@ public class MainFrame extends JFrame {
 	private class GenerateAction extends AbstractAction{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			System.out.println(math.toString());
 			TransitionManager.showCountDown();
 		}
 	}
