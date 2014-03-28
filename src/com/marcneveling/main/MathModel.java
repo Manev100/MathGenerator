@@ -13,8 +13,8 @@ import com.marcneveling.operation.Plus;
 public class MathModel extends AbstractModel{
 	public static final String MATH_SETUP_MIN_VAL = "minValue";
 	public static final String MATH_SETUP_MAX_VAL = "maxValue";
-	public static final String MATH_SETUP_MIN_RES = "maxResult";
-	public static final String MATH_SETUP_MAX_RES = "minResult";
+	public static final String MATH_SETUP_MIN_RES = "minResult";
+	public static final String MATH_SETUP_MAX_RES = "maxResult";
 	public static final String MATH_SETUP_NUM_OF_CONSTS = "numberOfConstants";
 
 	
@@ -43,7 +43,7 @@ public class MathModel extends AbstractModel{
 		this.maxValue = 20;
 		this.maxResult = 20;
 		this.minResult = 0;
-		this.setNumberOfConstants(3);
+		this.setNumberOfConstants(2);
 	}
 	
 	public List<Operation> getOperations() {
@@ -56,54 +56,77 @@ public class MathModel extends AbstractModel{
 			firePropertyChange("operations", oldList, operations);
 		}
 	}
-	public void removeOperation(Operation operation) {
+	
+	// always keeps atleast 1 operation
+	public boolean removeOperation(Operation operation) {
 		if(operations.contains(operation)){
+			boolean changed = false;
 			List<Operation> oldList = new LinkedList<Operation>(operations);
-			operations.remove(operation);
+			if(operations.size() > 1){
+				operations.remove(operation);
+				changed = true;
+			}
 			firePropertyChange("operations", oldList, operations);
+			return changed;
 		}
+		return false;
 	}
-	public int getMinValue() {
-		return minValue;
-	}
+	
+	
 	public void setMinValue(int rangeX) {
 		int oldVal = this.minValue;
-		this.minValue = rangeX;
+		if(maxValue < rangeX){
+			this.minValue = maxValue;
+		}else{
+			this.minValue = rangeX;
+		}
 		firePropertyChange("minValue", oldVal, minValue);
 	}
-	public int getMaxValue() {
-		return maxValue;
-	}
+	
 	public void setMaxValue(int rangeY) {
 		int oldVal = this.maxValue;
 		this.maxValue = rangeY;
 		firePropertyChange("maxValue", oldVal, maxValue);
 	}
-	public int getMaxResult() {
-		return maxResult;
-	}
+	
 	public void setMaxResult(int maxResult) {
 		int oldVal = this.maxResult;
 		this.maxResult = maxResult;
 		firePropertyChange("maxResult", oldVal, maxResult);
 	}
-	public int getMinResult() {
-		return minResult;
-	}
+	
 	public void setMinResult(int minResult) {
 		int oldVal = this.minResult;
-		this.minResult = minResult;
+		if(maxResult < minResult){
+			this.minResult = maxResult;
+		}else{
+			this.minResult = minResult;
+		}
 		firePropertyChange("minResult", oldVal, minResult);
 	}
 
-	public int getNumberOfConstants() {
-		return numberOfConstants;
-	}
+	
 
 	public void setNumberOfConstants(int numberOfConstants) {
 		int oldVal = this.numberOfConstants;
 		this.numberOfConstants = numberOfConstants;
 		firePropertyChange("numberOfConstants", oldVal, numberOfConstants);
+	}
+	
+	public int getMinValue() {
+		return minValue;
+	}
+	public int getMaxValue() {
+		return maxValue;
+	}
+	public int getMaxResult() {
+		return maxResult;
+	}
+	public int getMinResult() {
+		return minResult;
+	}
+	public int getNumberOfConstants() {
+		return numberOfConstants;
 	}
 	
 	public String toString(){
@@ -113,9 +136,10 @@ public class MathModel extends AbstractModel{
 		builder.append(MATH_SETUP_MIN_RES + " " + minResult + "\n");
 		builder.append(MATH_SETUP_MAX_RES + " " + maxResult + "\n");
 		builder.append(MATH_SETUP_NUM_OF_CONSTS + " " + numberOfConstants + "\n");
+		builder.append(operations.toString());
 		return builder.toString();
 	}
     
-}
-		
+}	
 				
+						

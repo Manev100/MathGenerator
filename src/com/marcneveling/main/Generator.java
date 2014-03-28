@@ -7,3 +7,4 @@ public interface Generator {
 	public PageModel getPageModel();
 	public void setPageModel(PageModel page);
 }
+

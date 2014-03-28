@@ -78,16 +78,23 @@ public class MathProblem {
 	}
 	
 	public String toString(){
+		return toStringHideResult() + result;
+	}
+
+	public String toStringHideResult() {
 		StringBuilder str = new StringBuilder();
 		Iterator<Integer> constantsIt = getConstantsIterator();
 		Iterator<Operation> operationsIt = getOperationsIterator();
 		while(operationsIt.hasNext()){
 			str.append(constantsIt.next());
+			str.append(" ");
 			str.append(operationsIt.next().getSign());
+			str.append(" ");
 		}
 		str.append(constantsIt.next());
+		str.append(" ");
 		str.append("=");
-		str.append(result);
+		str.append(" ");
 		return str.toString();
 	}
 }

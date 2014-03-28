@@ -1,6 +1,7 @@
 package com.marcneveling.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -8,12 +9,15 @@ import java.awt.event.FocusListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
 import com.jgoodies.binding.PresentationModel;
+import com.marcneveling.main.Generator;
 import com.marcneveling.main.KeyStrokesGenerator;
 import com.marcneveling.main.MathModel;
 import com.marcneveling.main.MathRobot;
@@ -22,11 +26,12 @@ import com.marcneveling.main.PageModel;
 public class MainFrame extends JFrame {
 
 	private JButton generateButton;
+	private JComboBox<Generator> changeBox;
 	private CountDownPane glasspane; 	
 	private MathModel math;
 	private PageModel page;
 	private GuiController controller;
-
+	
 	
 	public MainFrame(MathModel math, PageModel page, GuiController controller) {
 		super("Math Generator");
@@ -34,7 +39,7 @@ public class MainFrame extends JFrame {
 		this.page = page;
 		this.controller = controller;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 250);
+		setSize(500, 300);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setGlassPane(glasspane = new CountDownPane());
@@ -52,8 +57,13 @@ public class MainFrame extends JFrame {
 		generateButton.setText("Go!");
 		generateButton.setFocusable(false);
 		
+		changeBox = new JComboBox<Generator>(controller.getGenerators().toArray(new Generator[0]));
+		changeBox.setAction(controller.getChangeGeneratorAction());
+		
+		mainPanel.add(changeBox, BorderLayout.NORTH);
 		mainPanel.add(new SetupPanel(math, page, controller),BorderLayout.CENTER);
 		mainPanel.add(generateButton, BorderLayout.SOUTH);
+		
 		
 		setContentPane(mainPanel);
 	}
@@ -90,8 +100,9 @@ public class MainFrame extends JFrame {
 	private class GenerateAction extends AbstractAction{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(math.toString());
 			TransitionManager.showCountDown();
 		}
 	}
+	
+	
 }

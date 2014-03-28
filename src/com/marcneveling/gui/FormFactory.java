@@ -1,5 +1,6 @@
 package com.marcneveling.gui;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
@@ -8,6 +9,8 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+
 
 
 public class FormFactory {
@@ -42,6 +45,23 @@ public class FormFactory {
 		GridBagConstraints c = getLabelConstraints();
 		c.gridx = 1;
 		return c;
+	}
+	
+	public JToggleButton buildToggleButton(){
+		JToggleButton tButton = new JToggleButton();
+		
+		tButton.setBackground(Color.RED);
+		tButton.setContentAreaFilled(false);
+		tButton.setOpaque(true);
+		tButton.setFocusable(false);
+		/*
+		move to setupPanel
+		tButton.setAction(new ColorChangeAction("+"));
+		
+		
+		*/
+		return tButton;
+		
 	}
 
 }

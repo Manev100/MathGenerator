@@ -12,20 +12,19 @@ public class KeyStrokesGenerator implements Generator{
 	
 	private MathModel math;
 	private PageModel page;
-	private Random rand;
+	
 	
 	public KeyStrokesGenerator(MathModel math, PageModel page) {
 		this.math = math;
 		this.page = page;
-		this.rand = new Random();
 	}
 	
 	public void generateIt(MathRobot robot){
-		List<MathProblem> problems = generateRandomMathProblems(page.getNumberOfProblems());
+		MathProblemFactory factory = new MathProblemFactory();
+		List<MathProblem> problems = factory.generateRandomMathProblems(page.getNumberOfProblems(), math, page.getNumberOfProblems());
 		Iterator<MathProblem> problemsIt = problems.iterator();
 		for (int i = 0; i < page.getLines(); i++) {
 			for (int j = 0; j < page.getColumns(); j++) {
-				
 				robot.typeMathProblem(problemsIt.next());
 				if(j != page.getColumns()-1){
 					robot.tab(page.getTabs());
@@ -40,54 +39,6 @@ public class KeyStrokesGenerator implements Generator{
 		generateIt(new MathRobot());
 	}
 	
-	private List<MathProblem> generateRandomMathProblems(int count){
-		List<MathProblem> problems = new ArrayList<>(count);
-		for (int i = 0; i < count; i++) {
-			problems.add(generateRandomMathProblem());
-		}
-		return problems;
-	}
-	
-	
-	private MathProblem generateRandomMathProblem() {
-		List<Integer> constants = new LinkedList<Integer>();
-		List<Operation> operations = new LinkedList<Operation>();
-		boolean problemFound = false;
-		MathProblem problem = null;
-		while(!problemFound){
-			for (int i = 0; i < math.getNumberOfConstants(); i++) {
-				constants.add(randomInt(math.getMinValue(), math.getMaxValue()));
-			}	
-			for (int i = 0; i < math.getNumberOfConstants()-1; i++) {
-				operations.add(randomOperation(Operation.ALL_OPERATIONS));
-			}
-			
-			try{
-				problem = new MathProblem(constants, operations);
-				if(problem.getResult() >= math.getMinResult() && problem.getResult() <= math.getMaxResult()){
-					problemFound = true;
-				}else{
-					constants.clear();
-					operations.clear();
-				}
-			}catch(IllegalArgumentException e){ 
-				// skip to next possible problem 
-				constants.clear();
-				operations.clear();
-			}
-					
-			// maybe implement counter so method interrupts when no suitable math problem can be found
-		}
-		return problem;
-	}
-	
-	private int randomInt(int min, int max) {
-	    return (rand.nextInt((max - min) + 1) + min);
-	}
-	private Operation randomOperation(List<Operation> list){
-		return list.get(randomInt(0, list.size()-1));
-	}
-	
 	public MathModel getMathModel() {
 		return math;
 	}
@@ -99,5 +50,9 @@ public class KeyStrokesGenerator implements Generator{
 	}
 	public void setPageModel(PageModel page) {
 		this.page = page;
-	}				
+	}	
+	
+	public String toString(){
+		return "Key Strokes Generator";
+	}
 }	
