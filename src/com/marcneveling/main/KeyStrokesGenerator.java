@@ -25,11 +25,13 @@ public class KeyStrokesGenerator implements Generator{
 		Iterator<MathProblem> problemsIt = problems.iterator();
 		for (int i = 0; i < page.getLines(); i++) {
 			for (int j = 0; j < page.getColumns(); j++) {
-				robot.typeMathProblem(problemsIt.next());
-				if(j != page.getColumns()-1){
-					robot.tab(page.getTabs());
-				}else{
-					robot.enter();
+				if(problemsIt.hasNext()){
+					robot.typeMathProblem(problemsIt.next());
+					if(j != page.getColumns()-1){
+						robot.tab(page.getTabs());
+					}else{
+						robot.enter();
+					}
 				}
 			}
 		}

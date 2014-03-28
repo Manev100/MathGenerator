@@ -24,13 +24,15 @@ public class CopyToClipBoardGenerator implements Generator{
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < page.getLines(); i++) {
 			for (int j = 0; j < page.getColumns(); j++) {
-				builder.append(problemsIt.next().toStringHideResult());
-				if(j != page.getColumns()-1){
-					for (int j2 = 0; j2 < page.getTabs(); j2++) {
-						builder.append("\t");
+				if(problemsIt.hasNext()){
+					builder.append(problemsIt.next().toStringHideResult());
+					if(j != page.getColumns()-1){
+						for (int j2 = 0; j2 < page.getTabs(); j2++) {
+							builder.append("\t");
+						}
+					}else{
+						builder.append("\n");
 					}
-				}else{
-					builder.append("\n");
 				}
 			}
 		}
